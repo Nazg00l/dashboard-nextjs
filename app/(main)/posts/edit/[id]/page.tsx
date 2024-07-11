@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import posts from "@/data/posts";
+import { useToast } from "@/components/ui/use-toast";
 
 
 const formShcema = z.object({
@@ -41,8 +42,9 @@ interface PostEditPageProps {
     }
 }
 const PostEditPage = ({ params }: PostEditPageProps) => {
+    const { toast } = useToast();
+
     const post = posts.find((post) => post.id === params.id);
-    console.log(post);
 
     // Define the form. 
     const form = useForm<z.infer<typeof formShcema>>({
@@ -55,8 +57,12 @@ const PostEditPage = ({ params }: PostEditPageProps) => {
         }
     });
     // Define a submit handler
-    function onSubmit(values: z.infer<typeof formShcema>) {
-        console.log(values);
+    const onSubmit = (values: z.infer<typeof formShcema>) => {
+        toast({
+            title: 'Post updated successfully',
+            description: `Updated by ${post?.author} on ${post?.date}`,
+            duration: 3000,
+        });
     }
 
     return (
